@@ -7,6 +7,7 @@ from app import create_app
 from models import Actor, Movie, setup_db
 from models import db
 
+
 class CastingAgencyTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -14,7 +15,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client
         self.database_name = "casting_agency_test"
-        self.database_path = "postgres://{}/{}".format('localhost:5432', self.database_name)
+        self.database_path = "postgres://{}/{}".format(
+            'localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
         self.movie = {
@@ -39,21 +41,21 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_get_actors(self):
         res = self.client().get('/actors')
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(len(data['actors']))
 
     def test_get_actors_404(self):
         res = self.client().get('/actorsfail')
-        
+
         self.assertEqual(res.status_code, 404)
         self.assertEqual(res.get_json()['success'], False)
 
     def test_create_actors(self):
         res = self.client().post('/actors/create', json=self.actor)
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
@@ -66,7 +68,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     def test_edit_actors_404(self):
         res.self.client().patch('/actors/1000', json=self.actor)
-        
+
         self.assertEqual(res.status_code, 404)
         self.assertEqual(res.get_json()['success'], False)
 
@@ -79,28 +81,28 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     def test_delete_actors_404(self):
         res = self.client().delete('/actors/1000', json=self.actor)
-        
+
         self.assertEqual(res.status_code, 404)
         self.assertEqual(res.get_json()['success'], False)
 
     def test_get_movies(self):
         res = self.client().get('/movies')
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(len(data['movies']))
 
     def test_get_movies_404(self):
         res = self.client().get('/moviesfail')
-        
+
         self.assertEqual(res.status_code, 404)
         self.assertEqual(res.get_json()['success'], False)
 
     def test_create_movies(self):
         res = self.client().post('/movies/create', json=self.movie)
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
@@ -126,9 +128,10 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     def test_delete_movies_404(self):
         res = self.client().delete('/movies/1000', json=self.movie)
-        
+
         self.assertEqual(res.status_code, 404)
         self.assertEqual(res.get_json()['success'], False)
+
 
 if __name__ == "__main__":
     unittest.main()
